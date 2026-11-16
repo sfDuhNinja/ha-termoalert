@@ -1,0 +1,27 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "TermoAlert București",
+        "description": "Adresa urmărită. Diacriticele, majusculele și prefixe ca „Str”, „Bd”, „Șos” nu contează. Lasă blocul gol ca să urmărești toată strada.",
+        "data": {
+          "strada": "Strada",
+          "bloc": "Bloc (opțional)"
+        }
+      }
+    },
+    "error": {
+      "invalid_street": "Introdu numele străzii."
+    },
+    "abort": {
+      "already_configured": "Adresa este deja configurată."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "hot_water": {
+        "name": "Avarie apă caldă"
+      }
+    }
+  }
+}

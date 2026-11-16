@@ -1,0 +1,27 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "TermoAlert Bucharest",
+        "description": "Address to watch. Diacritics, case and prefixes like \"Str\", \"Bd\", \"Sos\" don't matter. Leave block empty to watch the whole street.",
+        "data": {
+          "strada": "Street",
+          "bloc": "Block (optional)"
+        }
+      }
+    },
+    "error": {
+      "invalid_street": "Enter a street name."
+    },
+    "abort": {
+      "already_configured": "This address is already configured."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "hot_water": {
+        "name": "Hot water outage"
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "domain": "termoalert",
+  "name": "TermoAlert București",
+  "codeowners": ["@sfDuhNinja"],
+  "config_flow": true,
+  "documentation": "https://github.com/sfDuhNinja/ha-termoalert",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/sfDuhNinja/ha-termoalert/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}
