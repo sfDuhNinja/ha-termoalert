@@ -72,7 +72,7 @@ class Outage(CoordinatorEntity, RestoreEntity, BinarySensorEntity):
             "motiv": r and r["motiv"],
             "estimare_remediere": r and _eta(r["estimare"]),
             "punct_termic": r and r["punct_termic"],
-            "alte_avarii": [f'{x["agent"]}: {x["motiv"]} (estimare {x["estimare"]})' for x in rows if x not in mine],
+            "alte_avarii": [f'{x["agent"]}: {x["motiv"]} (estimare {x["estimare"]})' for x in rows if x is not r],
             # computed from the same read, so automations need not compare two entities mid-update
             "apa_calda_afectata": any("ACC" in x["agent"] for x in rows),
             "incalzire_afectata": any("INC" in x["agent"] for x in rows),

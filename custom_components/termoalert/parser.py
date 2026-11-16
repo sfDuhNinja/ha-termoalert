@@ -7,8 +7,8 @@ URL = "https://www.cmteb.ro/functionare_sistem_termoficare.php"
 
 # street type prefixes as written by users and by CMTEB
 _PREFIX = re.compile(
-    r"^(strada|str|bulevardul|bulevard|b-dul|bdul|bd|bld|blvd|soseaua|sos|calea|cal|aleea|ale|al|"
-    r"intrarea|intr|int|splaiul|spl|piata|pta|pt|drumul|dr|fundatura|fnd|prelungirea|prel)\b\.?\s*")
+    r"^(?:(?:strada|str|bulevardul|bulevard|b-dul|bdul|bd|bld|blvd|soseaua|sos|calea|cal|aleea|ale|al|"
+    r"intrarea|intr|int|splaiul|spl|piata|pta|pt|drumul|dr|fundatura|fnd|prelungirea|prel)\b\.?\s*)+")
 
 
 def norm(s):
@@ -98,6 +98,7 @@ if __name__ == "__main__":
     assert affects(o, "Strada Garii de Nord", "7")  # no blocks listed -> whole street
     assert affects(o, "B-dul Ferdinand I", "125") and affects(o, "Ferdinand", "E1")
     assert affects(o, "soseaua pantelimon", "59-60") and not affects(o, "Pantelimon", "60A")
+    assert affects({"adrese": [("Drumul Taberei", "")]}, "Str. Drumul Taberei")  # stacked prefixes
     assert not affects(o, "Tei 2") and not affects(o, "")
     import sys
     if len(sys.argv) > 1:
