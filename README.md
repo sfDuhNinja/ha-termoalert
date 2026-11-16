@@ -9,8 +9,9 @@ Datele vin de la [CMTEB – Funcționare sistem termoficare](https://www.cmteb.r
 
 ## Instalare
 
-**Marketplace (Home Assistant 2026.11+):** Setări → Marketplace → caută „TermoAlert București”.
-Până la includerea în catalog: Marketplace → ⋮ → Custom repositories → `https://github.com/sfDuhNinja/ha-termoalert`, categoria *Integration*.
+[![Deschide în Marketplace](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=sfDuhNinja&repository=ha-termoalert&category=integration)
+
+**Marketplace (Home Assistant 2026.11+):** apasă butonul de mai sus, sau Setări → Marketplace → ⋮ → Custom repositories → `https://github.com/sfDuhNinja/ha-termoalert`, categoria *Integration*.
 
 **Manual:** copiază `custom_components/termoalert` în `config/custom_components/` și repornește Home Assistant.
 
