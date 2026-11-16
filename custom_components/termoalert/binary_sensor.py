@@ -12,7 +12,8 @@ from .parser import find
 TZ = dt_util.get_time_zone("Europe/Bucharest")
 # translation key -> (CMTEB code, icon)
 KINDS = {"hot_water": ("ACC", "mdi:water-boiler-alert"), "heating": ("INC", "mdi:radiator-off")}
-ATTRS = ("tip", "motiv", "estimare_remediere", "punct_termic", "alte_avarii", "ultima_citire")
+ATTRS = ("tip", "motiv", "estimare_remediere", "punct_termic", "alte_avarii",
+         "apa_calda_afectata", "incalzire_afectata", "ultima_citire")
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -72,5 +73,8 @@ class Outage(CoordinatorEntity, RestoreEntity, BinarySensorEntity):
             "estimare_remediere": r and _eta(r["estimare"]),
             "punct_termic": r and r["punct_termic"],
             "alte_avarii": [f'{x["agent"]}: {x["motiv"]} (estimare {x["estimare"]})' for x in rows if x not in mine],
+            # computed from the same read, so automations need not compare two entities mid-update
+            "apa_calda_afectata": any("ACC" in x["agent"] for x in rows),
+            "incalzire_afectata": any("INC" in x["agent"] for x in rows),
             "ultima_citire": self.coordinator.last_success,
         }

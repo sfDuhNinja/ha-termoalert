@@ -40,6 +40,7 @@ Pentru fiecare adresă, două senzori:
 | `estimare_remediere` | data și ora estimată (ISO) |
 | `punct_termic` | punctul termic afectat |
 | `alte_avarii` | celelalte avarii pe aceeași adresă |
+| `apa_calda_afectata` / `incalzire_afectata` | dacă adresa are acum vreo avarie la apa caldă / încălzire (din aceeași citire, utile în automatizări) |
 | `ultima_citire` | ultima citire reușită a paginii CMTEB |
 
 Dacă pagina CMTEB nu răspunde, senzorii păstrează ultima stare cunoscută (vezi `ultima_citire`). După un restart, starea se restaurează și pagina e recitită la un minut după pornire, ca automatizările să prindă și schimbările din timpul restartului.
