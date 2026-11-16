@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import logging
 
 import aiohttp
 
@@ -9,7 +10,10 @@ from homeassistant.util import dt as dt_util
 
 from .parser import URL, find, parse
 
+_LOGGER = logging.getLogger(__name__)
 SCAN_INTERVAL = timedelta(minutes=10)
+# cmteb.ro answers 403 to the default aiohttp/HomeAssistant user agent
+HEADERS = {"User-Agent": "Mozilla/5.0 (Home Assistant; termoalert)"}
 TZ = dt_util.get_time_zone("Europe/Bucharest")
 
 
@@ -39,9 +43,17 @@ class HotWaterOutage(BinarySensorEntity):
                                   "manufacturer": "CMTEB", "model": "TermoAlert", "entry_type": DeviceEntryType.SERVICE}
 
     async def async_update(self):
-        resp = await async_get_clientsession(self.hass).get(URL, timeout=aiohttp.ClientTimeout(total=30))
-        resp.raise_for_status()
-        rows = find(parse(await resp.text()), self._strada, self._bloc)
+        try:
+            resp = await async_get_clientsession(self.hass).get(
+                URL, headers=HEADERS, timeout=aiohttp.ClientTimeout(total=30))
+            resp.raise_for_status()
+            rows = find(parse(await resp.text()), self._strada, self._bloc)
+        except (aiohttp.ClientError, TimeoutError, ValueError) as err:
+            if self._attr_available:
+                _LOGGER.warning("Nu pot citi avariile CMTEB: %s", err)
+            self._attr_available = False
+            return
+        self._attr_available = True
         acc = [r for r in rows if "ACC" in r["agent"]]
         self._attr_is_on = bool(acc)
         r = acc[0] if acc else None
