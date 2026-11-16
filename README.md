@@ -28,15 +28,21 @@ Poți adăuga mai multe adrese (de ex. acasă și la părinți).
 
 ## Ce primești
 
-`binary_sensor.<adresa>_avarie_apa_calda`: `on` când e oprire sau deficiență la apa caldă (ACC) pe adresa ta.
+Pentru fiecare adresă, două senzori:
+
+- `binary_sensor.<adresa>_avarie_apa_calda`: `on` când e oprire sau deficiență la apa caldă (ACC)
+- `binary_sensor.<adresa>_avarie_incalzire`: `on` când e oprire sau deficiență la încălzire (INC)
 
 | Atribut | Conținut |
 |---|---|
-| `tip` | ex. „Oprire ACC/INC”, „Deficienta ACC” |
+| `tip` | ex. „Oprire ACC/INC”, „Deficienta INC” |
 | `motiv` | cauza / descrierea intervenției |
 | `estimare_remediere` | data și ora estimată (ISO) |
 | `punct_termic` | punctul termic afectat |
-| `alte_avarii` | avarii doar la încălzire pe aceeași adresă |
+| `alte_avarii` | celelalte avarii pe aceeași adresă |
+| `ultima_citire` | ultima citire reușită a paginii CMTEB |
+
+Dacă pagina CMTEB nu răspunde, senzorii păstrează ultima stare cunoscută (vezi `ultima_citire`). După un restart, starea se restaurează și pagina e recitită la un minut după pornire, ca automatizările să prindă și schimbările din timpul restartului.
 
 Dacă CMTEB listează o stradă fără blocuri, se consideră afectată toată strada. Intervalele de blocuri („E1-E4”) se potrivesc doar la capete (E1, E4).
 

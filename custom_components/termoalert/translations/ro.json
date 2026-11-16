@@ -21,6 +21,9 @@
     "binary_sensor": {
       "hot_water": {
         "name": "Avarie apă caldă"
+      },
+      "heating": {
+        "name": "Avarie încălzire"
       }
     }
   }
