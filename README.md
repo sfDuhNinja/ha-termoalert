@@ -2,7 +2,7 @@
 
 # TermoAlert București pentru Home Assistant
 
-Îți spune dacă blocul tău din București are avarie la apa caldă, motivul și când se estimează remedierea.
+Îți spune dacă blocul tău din București are avarie la apa caldă sau la încălzire, care e motivul și când se estimează remedierea.
 Datele vin de la [CMTEB – Funcționare sistem termoficare](https://www.cmteb.ro/functionare_sistem_termoficare.php), aceeași sursă ca aplicația TermoAlert. Pagina e citită la fiecare 10 minute.
 
 > Integrare neoficială, fără legătură cu Termoenergetica București (CMTEB).
@@ -28,7 +28,7 @@ Poți adăuga mai multe adrese (de ex. acasă și la părinți).
 
 ## Ce primești
 
-Pentru fiecare adresă, două senzori:
+Pentru fiecare adresă, doi senzori:
 
 - `binary_sensor.<adresa>_avarie_apa_calda`: `on` când e oprire sau deficiență la apa caldă (ACC)
 - `binary_sensor.<adresa>_avarie_incalzire`: `on` când e oprire sau deficiență la încălzire (INC)
@@ -37,15 +37,15 @@ Pentru fiecare adresă, două senzori:
 |---|---|
 | `tip` | ex. „Oprire ACC/INC”, „Deficienta INC” |
 | `motiv` | cauza / descrierea intervenției |
-| `estimare_remediere` | data și ora estimată (ISO) |
+| `estimare_remediere` | data și ora estimate (ISO) |
 | `punct_termic` | punctul termic afectat |
 | `alte_avarii` | celelalte avarii pe aceeași adresă |
-| `apa_calda_afectata` / `incalzire_afectata` | dacă adresa are acum vreo avarie la apa caldă / încălzire (din aceeași citire, utile în automatizări) |
+| `apa_calda_afectata` / `incalzire_afectata` | dacă adresa are acum vreo avarie la apa caldă / încălzire (calculate din aceeași citire, utile în automatizări) |
 | `ultima_citire` | ultima citire reușită a paginii CMTEB |
 
 Dacă pagina CMTEB nu răspunde, senzorii păstrează ultima stare cunoscută (vezi `ultima_citire`). După un restart, starea se restaurează și pagina e recitită la un minut după pornire, ca automatizările să prindă și schimbările din timpul restartului.
 
-Dacă CMTEB listează o stradă fără blocuri, se consideră afectată toată strada. Intervalele de blocuri („E1-E4”) se potrivesc doar la capete (E1, E4).
+Dacă CMTEB listează o stradă fără blocuri, se consideră afectată toată strada. Intervalele includ tot ce e între capete: blocurile „E1-E4” înseamnă E1, E2, E3, E4, iar numerele „imob. nr. 89-93” înseamnă 89, 91, 93 (aceeași parte a străzii).
 
 ## Notificare pe telefon
 

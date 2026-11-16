@@ -32,12 +32,24 @@ def bloc_key(s):
     return norm(_BL.sub(" ", s or "")).replace(" ", "")
 
 
+def norm_dash(s):
+    """Like norm, but keeps '-' so block ranges stay visible."""
+    s = unicodedata.normalize("NFKD", _BL.sub(" ", s)).encode("ascii", "ignore").decode().lower()
+    return re.sub(r"[^a-z0-9-]+", " ", s).strip()
+
+
 def _blocks(s):
-    """'bl. 5A2, 5; imob.Nr.125, E1- E4' -> {'5a2', '5', '125', 'e1e4', 'e1', 'e4'}."""
+    """'bl. 5A2, 5; imob.Nr.125, E1- E4' -> {'5a2', '5', '125', 'e1e4', 'e1', 'e2', 'e3', 'e4'}."""
     out = set()
     for part in re.split(r"[,;]", s):
         out.add(bloc_key(part))
-        out.update(norm(_BL.sub(" ", part)).split())  # ponytail: "E1- E4" ranges match only their ends, not E2/E3
+        out.update(norm(_BL.sub(" ", part)).split())
+        # every block in a range: "E1- E4" -> E1..E4, "5A1-5A3", "1A-3A", "12-14", "E4-E1"
+        for m in re.finditer(r"\b(\w*?)(\d+)([a-z]?)\s*-\s*(?:\1)?(\d+)\3\b", norm_dash(part)):
+            a, b = sorted((int(m[2]), int(m[4])))
+            # street numbers ("imob. nr. 89-91") keep to one side of the street: 89, 91 but not 90
+            step = 2 if re.search(r"(?i)\b(imob|nr)", part) and a % 2 == b % 2 else 1
+            out.update(f"{m[1]}{n}{m[3]}" for n in range(a, b + 1, step))
     out.discard("")
     return out
 
@@ -97,6 +109,12 @@ if __name__ == "__main__":
     assert not affects(o, "Lacul Tei", "5A")
     assert affects(o, "Strada Garii de Nord", "7")  # no blocks listed -> whole street
     assert affects(o, "B-dul Ferdinand I", "125") and affects(o, "Ferdinand", "E1")
+    assert affects(o, "Ferdinand", "E3") and affects(o, "Ferdinand", "G2") and not affects(o, "Ferdinand", "E5")
+    for bl, want, not_want in [("bl. 5A1-5A3", "5A2", "5A4"), ("12-14", "13", "15"), ("bl. E4 - E1", "E2", "E5"),
+                               ("1A-3A", "2A", "2"), ("bl. M1-M10, P2", "M7", "M11"), ("E1-E4 sc. 2", "E3", "E6"),
+                               ("imob. nr.89-93", "91", "90"), ("bl.404-406", "405", "407")]:
+        assert affects({"adrese": [("Str X", bl)]}, "X", want), (bl, want)
+        assert not affects({"adrese": [("Str X", bl)]}, "X", not_want), (bl, not_want)
     assert affects(o, "soseaua pantelimon", "59-60") and not affects(o, "Pantelimon", "60A")
     assert affects({"adrese": [("Drumul Taberei", "")]}, "Str. Drumul Taberei")  # stacked prefixes
     assert not affects(o, "Tei 2") and not affects(o, "")
